@@ -14,8 +14,9 @@ import os
 import pickle
 import re
 
-mdir = '/home/cathywu/Dropbox/kinectdemo/Music/'
-ddir = '/home/cathywu/Dropbox/kinectdemo/mdata/'
+soundstretch = './soundstretch'
+mdir = os.path.expanduser('~/Dropbox/kinect-conductor/Music')
+ddir = os.path.expanduser('~/Dropbox/kinect-conductor/mdata')
 fname = 'clip2.wav'
 snippet_duration = 1.0 # in seconds
 multiplier = 1
@@ -36,7 +37,7 @@ def stretch_audio(r,fname=fname):
     
     mixer.init(f*multiplier)
     
-    (a_full) = pickle.load(open(ddir + fname + '.pkl','r'))
+    (a_full) = pickle.load(open('%s/%s.pkl' % (ddir, fname),'r'))
     
     #f = mixer.get_init()[0]
     #mixer.quit()
@@ -53,7 +54,7 @@ def stretch_audio(r,fname=fname):
     # plays first few seconds of audio clip
     starttime = time.time()
     secondsin = 0
-    cmd = 'soundstretch temp.wav output.wav -tempo=%d'
+    cmd = '%s temp.wav output.wav -tempo=%d'
     #cmd = 'soundstretch temp.wav output.wav -bpm=%d'
     #for i in range(30):
     bpm = 0
@@ -72,7 +73,7 @@ def stretch_audio(r,fname=fname):
         out.close()
     
         # fork a process to change tempo of chunk
-        pargs = shlex.split(cmd % (100*(rate-1)))
+        pargs = shlex.split(cmd % (soundstretch, 100*(rate-1)))
         #pargs = shlex.split(cmd % (60000/rate))
         p = sp.Popen(pargs, stdout=open(os.devnull,'w'), stderr=open(os.devnull,'w'))
         p.wait()
@@ -97,11 +98,14 @@ def enqueueSamples(channel, an_array):
     channel.queue(snd.make_sound(an_array))
 
 def get_base_bpm(fname):
-    cmd = 'soundstretch "%s" output.wav -bmp' % (mdir + fname)
+    cmd = '%s "%s/%s" output.wav -bmp' % (soundstretch, mdir, fname)
     print cmd
     pargs = shlex.split(cmd)
-    p = sp.Popen(pargs, stdout=sp.PIPE)
-    (out,_) = p.communicate()
+    # Ubuntu sends output to stdout, OSX sends output to stderr
+    p = sp.Popen(pargs, stdout=sp.PIPE, stderr=sp.PIPE)
+    (out,err) = p.communicate()
+    if out == '': # OSX case
+        out = err
     
     m = re.search('Detected BPM rate (.*)\n', out)
     return float(m.group(1))
