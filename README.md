@@ -36,8 +36,26 @@ Install pygame
     brew install sdl sdl_image sdl_mixer sdl_ttf portmidi
     sudo pip install hg+http://bitbucket.org/pygame/pygame
 
+Download [SoundStretch](http://www.surina.net/soundtouch/soundstretch.html) utility to `kinect-conductor` directory
+
 Run
 ----
+
+To run a specific song:
+
+    python conductor.py --filename "Everything is Awesome.wav"
+
+To list available songs:
+
+    python conductor.py --list
+
+To calibrate the background (make sure no one is in the view of the Kinect when running this):
+
+    python conductor.py --calibrate
+
+To load new a new song (only supports WAV):
+
+    python conductor.py --load --filename "Everything is Awesome.wav"
 
 Troubleshoot
 ----
