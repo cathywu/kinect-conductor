@@ -86,7 +86,7 @@ def view_depth(depth,scale=2):
     da = np.dstack(map2rgb(depth,MIN_DEPTH,MAX_DEPTH)).astype(np.uint8)
     
     # Simple Downsample
-    cv.ShowImage('both',down_sample(da,scale).copy())
+    cv.ShowImage('both',cv.fromarray(down_sample(da,scale).copy()))
     cv.WaitKey(100)
 
 def view_depths(depth1,depth2,rgb,scale=2):

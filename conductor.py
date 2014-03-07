@@ -17,6 +17,7 @@ LEFT = 1
 
 # parameters
 tilt = 0;
+led = LED_OFF;
 MIN_DEPTH = 300
 MAX_DEPTH = 1200
 BACK_DEPTH_FNAME = 'back_depth.pkl'
@@ -88,7 +89,6 @@ if __name__ == '__main__':
 
     #TODO fix this comment: make rate accessible to audio thread
     if args.init:
-        led = LED_OFF;
         freenect.runloop(body=body)
 
     # calculates average depth and stores it
