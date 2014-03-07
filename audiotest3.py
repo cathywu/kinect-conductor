@@ -23,10 +23,10 @@ multiplier = 1
 f = 48000
 
 def load_song(fname):
-    ff = open(ddir + fname + '.pkl','w')
+    ff = open('%s/%s.pkl' % (ddir, fname),'w')
 
     mixer.init(f*multiplier)
-    s_full = mixer.Sound(mdir + fname)
+    s_full = mixer.Sound('%s/%s' % (mdir, fname))
     a_full = snd.array(s_full)
 
     pickle.dump(a_full,ff)
